@@ -4,7 +4,8 @@
 var url = 'https://builds.framerjs.com/version/latest/Framer.zip?utm_source=GitHub%2C%20framerjs%2C%20readme&utm_medium=Github';
 var commandLineArgs = require('command-line-args');
 var commandLineOpts = [
-    {name: 'dir', alias: 'd', type: String}
+    {name: 'dir', alias: 'd', type: String},
+    {name: 'update', alias: 'u', type: Boolean}
 ];
 var options = commandLineArgs(commandLineOpts);
 // Download dependencies
@@ -12,6 +13,7 @@ var fs = require('fs');
 var https = require('https');
 // Display command line arguments
 var destinationDir = options['dir']
+var doesUpdate = options['update'];
 var fileName = 'Framer.zip';
 console.log(options);
 
@@ -28,10 +30,13 @@ var downloadFramer = function(url, dest, cb) {
     });
 };
 
-downloadFramer(url, './'+ fileName , function(errMsg) {
-    if (errMsg) {
-        console.error(errMsg);
-        return;
-    }
-    console.log('Download complete! Saved at ' + destinationDir);
-})
+if (doesUpdate) {
+    console.log('Downloading Framer.zip');
+    downloadFramer(url, './'+ fileName , function(errMsg) {
+        if (errMsg) {
+            console.error(errMsg);
+            return;
+        }
+        console.log('Download complete! Saved at ' + destinationDir);
+    })
+}
