@@ -1,13 +1,8 @@
 /**
  * @fileoverview Initializes a Windows Framer project at a specified directory.
 */
-var url = 'https://builds.framerjs.com/version/latest/Framer.zip?utm_source=GitHub%2C%20framerjs%2C%20readme&utm_medium=Github';
-var commandLineArgs = require('command-line-args');
-var commandLineOpts = [
-    {name: 'dir', alias: 'd', type: String},
-    {name: 'update', alias: 'u', type: Boolean}
-];
-var options = commandLineArgs(commandLineOpts);
+var options = require('./args.js');
+var config = require('./config.js');
 // Download dependencies
 var fs = require('fs');
 var https = require('https');
@@ -15,7 +10,6 @@ var https = require('https');
 var destinationDir = options['dir']
 var doesUpdate = options['update'];
 var fileName = 'Framer.zip';
-console.log(options);
 
 var downloadFramer = function(url, dest, cb) {
     var file = fs.createWriteStream(dest);
@@ -39,4 +33,6 @@ if (doesUpdate) {
         }
         console.log('Download complete! Saved at ' + destinationDir);
     })
+} else {
+    console.log('using stored file.');
 }
