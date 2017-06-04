@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "command-line-args": "^4.0.6"
+    "command-line-args": "^4.0.6",
+    "unzip": "^0.1.11"
   }
 }
