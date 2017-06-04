@@ -1,37 +1,36 @@
 /**
  * @fileoverview Initializes a Windows Framer project at a specified directory.
 */
-var options = require('./args.js');
-var config = require('./config.js');
+const options = require('./args.js');
+const config = require('./config.js');
 // Download dependencies
-var fs = require('fs');
-var https = require('https');
+const fs = require('fs');
+const https = require('https');
 // Display command line arguments
-var destinationDir = options['dir']
-var doesUpdate = options['update'];
-var fileName = 'Framer.zip';
+const destinationDir = options['dir']
+const doesUpdate = options['update'];
+const fileName = 'Framer.zip';
 
-var downloadFramer = function(url, dest, cb) {
-    var file = fs.createWriteStream(dest);
-    var request = https.get(url, function(response) {
-        response.pipe(file);
-        file.on('finish', function() {
-            file.close(cb);
+const download = (url, dest) => {
+    return new Promise((resolve, reject) => {
+        const stream = fs.createWriteStream(dest);
+        https.get(url, (response) => {
+          stream.on('finish', _ => resolve())
+          .on('error', err => {
+              fs.unlink(dest);
+              reject(err.message);
+          });
         });
-    }).on('error', function(err) {
-        fs.unlink(dest);
-        if (cb) cb(err.message);
     });
 };
 
 if (doesUpdate) {
     console.log('Downloading Framer.zip');
-    downloadFramer(url, './'+ fileName , function(errMsg) {
-        if (errMsg) {
-            console.error(errMsg);
+    download(config.SRC_URL, `./${fileName}`).catch(msg => {
+        if (msg) {
+            console.error(msg);
             return;
         }
-        console.log('Download complete! Saved at ' + destinationDir);
     })
 } else {
     console.log('using stored file.');
